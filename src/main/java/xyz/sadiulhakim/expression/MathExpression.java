@@ -127,7 +127,6 @@ public class MathExpression {
             return this;
         }
 
-        // Remember it would be long division and not double
         public Builder divide(double num) {
 
             if (num == 0) {
