@@ -5,6 +5,11 @@ import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * Author: Sadiul Hakim
+ * Profession: Backend Engineer
+ * Date: Oct 20, 2024
+ */
 public class MathExpression {
     private final double number;
 
