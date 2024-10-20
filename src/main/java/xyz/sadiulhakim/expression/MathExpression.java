@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.BiFunction;
 
 /**
  * Author: Sadiul Hakim
@@ -50,9 +51,31 @@ public class MathExpression {
             return this;
         }
 
+        public Builder addIf(double num, BiFunction<Double, Double, Boolean> condition) {
+            LOCK.writeLock().lock();
+
+            if (condition.apply(NUMBER, num)) {
+                NUMBER += num;
+            }
+
+            LOCK.writeLock().unlock();
+            return this;
+        }
+
         public Builder minus(double num) {
             LOCK.writeLock().lock();
             NUMBER -= num;
+            LOCK.writeLock().unlock();
+            return this;
+        }
+
+        public Builder minusIf(double num, BiFunction<Double, Double, Boolean> condition) {
+            LOCK.writeLock().lock();
+
+            if (condition.apply(NUMBER, num)) {
+                NUMBER -= num;
+            }
+
             LOCK.writeLock().unlock();
             return this;
         }
@@ -132,6 +155,16 @@ public class MathExpression {
             return this;
         }
 
+        public Builder multiplyIf(double num, BiFunction<Double, Double, Boolean> condition) {
+            LOCK.writeLock().lock();
+
+            if (condition.apply(NUMBER, num)) {
+                NUMBER *= num;
+            }
+            LOCK.writeLock().unlock();
+            return this;
+        }
+
         public Builder divide(double num) {
 
             if (num == 0) {
@@ -147,9 +180,38 @@ public class MathExpression {
             return this;
         }
 
+        public Builder divideIf(double num, BiFunction<Double, Double, Boolean> condition) {
+
+            if (num == 0) {
+                return this;
+            }
+
+            LOCK.writeLock().lock();
+            try {
+
+                if (condition.apply(NUMBER, num)) {
+                    NUMBER /= num;
+                }
+            } finally {
+                LOCK.writeLock().unlock();
+            }
+            return this;
+        }
+
         public Builder mod(double num) {
             LOCK.writeLock().lock();
             NUMBER %= num;
+            LOCK.writeLock().unlock();
+            return this;
+        }
+
+        public Builder modIf(double num, BiFunction<Double, Double, Boolean> condition) {
+            LOCK.writeLock().lock();
+
+            if (condition.apply(NUMBER, num)) {
+                NUMBER %= num;
+            }
+
             LOCK.writeLock().unlock();
             return this;
         }
@@ -287,6 +349,26 @@ public class MathExpression {
             if (cleanMemory) {
                 memory = 0;
             }
+            LOCK.writeLock().unlock();
+            return this;
+        }
+
+        public Builder set(double num) {
+            LOCK.writeLock().lock();
+
+            NUMBER = num;
+
+            LOCK.writeLock().unlock();
+            return this;
+        }
+
+        public Builder setIf(double num, BiFunction<Double, Double, Boolean> condition) {
+            LOCK.writeLock().lock();
+
+            if (condition.apply(NUMBER, num)) {
+                NUMBER = num;
+            }
+
             LOCK.writeLock().unlock();
             return this;
         }
