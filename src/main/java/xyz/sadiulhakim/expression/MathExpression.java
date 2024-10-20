@@ -64,7 +64,7 @@ public class MathExpression {
             return this;
         }
 
-        public Builder pi() {
+        public Builder PI() {
             if (NUMBER != 0) {
                 throw new RuntimeException("Number is bigger than zero!");
             }
@@ -75,7 +75,7 @@ public class MathExpression {
             return this;
         }
 
-        public Builder e() {
+        public Builder E() {
             if (NUMBER != 0) {
                 throw new RuntimeException("Number is bigger than zero!");
             }
@@ -268,7 +268,7 @@ public class MathExpression {
             return this;
         }
 
-        public Builder store() {
+        public Builder remember() {
             LOCK.writeLock().lock();
             memory = NUMBER;
             LOCK.writeLock().unlock();
@@ -283,6 +283,15 @@ public class MathExpression {
                 memory = 0;
             }
             LOCK.writeLock().unlock();
+            return this;
+        }
+
+        public Builder print() {
+            LOCK.readLock().lock();
+
+            System.out.println("MathExpression Result :: " + NUMBER);
+
+            LOCK.readLock().unlock();
             return this;
         }
 
